@@ -72,6 +72,6 @@ def diff_str(str, list_table):
 
 
 if __name__ == '__main__':
-    str1 = '1、机房环境类'
-    list_table1 = finality_renewal_list
+    str1 = '4.2 2019年应用项目'
+    list_table1 = type_table_increase_sub
     print(diff_str(str1, list_table1))
