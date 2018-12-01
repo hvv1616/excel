@@ -1,3 +1,5 @@
+#本测试程序用于测算字符串匹配率
+
 import difflib
 
 
@@ -72,6 +74,6 @@ def diff_str(str, list_table):
 
 
 if __name__ == '__main__':
-    str1 = '4.2 2019年应用项目'
+    str1 = '4.2 2019年应用项目(2016-2018年，我行年均特色项目执行金额为389万元)'
     list_table1 = type_table_increase_sub
     print(diff_str(str1, list_table1))

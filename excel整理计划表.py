@@ -302,11 +302,11 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
             self.target_df.at[target_df_append_line_num, '单价（RMB万元）'] = 0.0000
             self.target_df.at[target_df_append_line_num, '数量'] = 0
 
-            if str(df_read.iloc[i, 0]).strip() in type_table:  # 判断该行是否是大类说明
+            if diff_str_check(str(df_read.iloc[i, 0]).strip(),type_table):  # 判断该行是否是大类说明
                 type_1 = df_read.iloc[i, 0].strip()
                 type_2 = ''
                 self.target_df.at[target_df_append_line_num, '分项目名称'] = '000大类'
-            elif str(df_read.iloc[i, 0]).strip() in type_table_sub:  # 判断该行是否是小类说明
+            elif diff_str_check(str(df_read.iloc[i, 0]).strip(),type_table_sub):  # 判断该行是否是小类说明
                 type_2 = df_read.iloc[i, 0].strip()
                 self.target_df.at[target_df_append_line_num, '分项目名称'] = '000小类'
             elif str(df_read.iloc[i, 0]).strip() in index_table:  # 判断该行是否是标题
