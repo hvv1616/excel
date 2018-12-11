@@ -179,71 +179,81 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
             type_table_sub = type_table_increase_sub
 
         for i in range(0, total_line_num):
-            self.target_df.at[i + append_begin_line_num, '用途'] = sheet_type
-            self.target_df.at[i + append_begin_line_num, '分行名称'] = branch_name
-            self.target_df.at[i + append_begin_line_num, '项目序号'] = i + 3
-            self.target_df.at[i + append_begin_line_num, '分项目名称'] = '000无分项目名称'
-            self.target_df.at[i + append_begin_line_num, '分项计划资金（RMB万元）'] = 0.0000
-            self.target_df.at[i + append_begin_line_num, '单价（RMB万元）'] = 0.0000
-            self.target_df.at[i + append_begin_line_num, '数量'] = 0
+            target_df_append_line_num = i + append_begin_line_num
+            self.target_df.at[target_df_append_line_num, '用途'] = sheet_type
+            self.target_df.at[target_df_append_line_num, '分行名称'] = branch_name
+            self.target_df.at[target_df_append_line_num, '项目序号'] = i + 3
+            self.target_df.at[target_df_append_line_num, '分项目名称'] = '000无分项目名称'
+            self.target_df.at[target_df_append_line_num, '分项计划资金（RMB万元）'] = 0.0000
+            self.target_df.at[target_df_append_line_num, '单价（RMB万元）'] = 0.0000
+            self.target_df.at[target_df_append_line_num, '数量'] = 0
 
-            if str(df_read.iloc[i, 0]).strip() in type_table:  # 判断该行是否是大类说明
+            # 判断该行是否是大类说明
+            if diff_str_check(str(df_read.iloc[i, 0]).strip(), type_table):
                 type_1 = df_read.iloc[i, 0].strip()
                 type_2 = ''
-            elif str(df_read.iloc[i, 0]).strip() in type_table_sub:  # 判断该行是否是小类说明
+                self.target_df.at[target_df_append_line_num, '分项目名称'] = '000大类'
+            # 判断该行是否是小类说明
+            elif diff_str_check(str(df_read.iloc[i, 0]).strip(), type_table_sub):
                 type_2 = df_read.iloc[i, 0].strip()
+                self.target_df.at[target_df_append_line_num, '分项目名称'] = '000小类'
             elif str(df_read.iloc[i, 0]).strip() in index_table:  # 判断该行是否是标题
-                pass  # 跳过标题行
+                self.target_df.at[target_df_append_line_num, '分项目名称'] = '000表头'
             elif str(df_read.iloc[i, 1]).strip() == '合计' or str(df_read.iloc[i, 2]).strip() == '合计':
-                pass  # 跳过合计行
+                self.target_df.at[target_df_append_line_num, '分项目名称'] = '000合计'
             elif str(df_read.iloc[i, 1]).strip() == '总计' or str(df_read.iloc[i, 2]).strip() == '总计':
-                pass  # 跳过总计行
-            elif '负责人' in str(df_read.iloc[i, 7]):
-                pass
-            elif '联系人' in str(df_read.iloc[i, 7]):
-                pass
-            elif '联系电话' in str(df_read.iloc[i, 7]):
-                pass
-            # elif (str(df_read.iloc[i, 3]) + str(df_read.iloc[i, 6])) == 'nannan':  # 判断该行单价和金额是否同时为空
-            #    pass  # 跳过无金额和单价的行
+                self.target_df.at[target_df_append_line_num, '分项目名称'] = '000总计'
+            elif str(df_read.iloc[i, 1]).strip() == '小计' or str(df_read.iloc[i, 2]).strip() == '小计':
+                self.target_df.at[target_df_append_line_num, '分项目名称'] = '000小计'
             else:
-                self.target_df.at[i + append_begin_line_num, '大类'] = type_1
-                self.target_df.at[i + append_begin_line_num, '小类'] = type_2
-                self.target_df.at[i + append_begin_line_num, '分项目名称'] = df_read.iloc[i, 1]
+                self.target_df.at[target_df_append_line_num, '大类'] = type_1
+                self.target_df.at[target_df_append_line_num, '小类'] = type_2
+                self.target_df.at[target_df_append_line_num, '分项目名称'] = df_read.iloc[i, 1]
                 # 需要判断'分项目名称'处的合并单元格无法读取值的问题，取上一行数据即可
-                if str(self.target_df.at[i + append_begin_line_num, '分项目名称']) == 'nan' and i > 5:
-                    self.target_df.at[i + append_begin_line_num, '分项目名称'] = self.target_df.at[
-                        i + append_begin_line_num - 1, '分项目名称']
-                self.target_df.at[i + append_begin_line_num, '设备名称'] = df_read.iloc[i, 2]
-                self.target_df.at[i + append_begin_line_num, '分项计划资金（RMB万元）'] = df_read.iloc[i, 3]
-                self.target_df.at[i + append_begin_line_num, '参考品牌'] = df_read.iloc[i, 4]
-                self.target_df.at[i + append_begin_line_num, '参考型号'] = df_read.iloc[i, 5]
-                self.target_df.at[i + append_begin_line_num, '单价（RMB万元）'] = df_read.iloc[i, 6]
-                self.target_df.at[i + append_begin_line_num, '数量'] = df_read.iloc[i, 7]
-                self.target_df.at[i + append_begin_line_num, '现有设备情况说明'] = df_read.iloc[i, 8]
-                self.target_df.at[i + append_begin_line_num, '备注'] = df_read.iloc[i, 9]
-                self.target_df.at[i + append_begin_line_num, '审核意见'] = df_read.iloc[i, 10]
-                self.target_df.at[i + append_begin_line_num, '审核单价'] = df_read.iloc[i, 11]
-                self.target_df.at[i + append_begin_line_num, '审核数量'] = df_read.iloc[i, 12]
-                self.target_df.at[i + append_begin_line_num, '审核金额'] = df_read.iloc[i, 13]
-                self.target_df.at[i + append_begin_line_num, '审核金额核对'] = df_read.iloc[i, 11] * df_read.iloc[i, 12] \
+                if str(self.target_df.at[target_df_append_line_num, '分项目名称']) == 'nan' and i > 5:
+                    self.target_df.at[target_df_append_line_num, '分项目名称'] = self.target_df.at[
+                        target_df_append_line_num - 1, '分项目名称']
+                self.target_df.at[target_df_append_line_num, '设备名称'] = df_read.iloc[i, 2]
+                self.target_df.at[target_df_append_line_num, '分项计划资金（RMB万元）'] = df_read.iloc[i, 3]
+                self.target_df.at[target_df_append_line_num, '参考品牌'] = df_read.iloc[i, 4]
+                self.target_df.at[target_df_append_line_num, '参考型号'] = df_read.iloc[i, 5]
+                self.target_df.at[target_df_append_line_num, '单价（RMB万元）'] = df_read.iloc[i, 6]
+                self.target_df.at[target_df_append_line_num, '数量'] = df_read.iloc[i, 7]
+                self.target_df.at[target_df_append_line_num, '现有设备情况说明'] = df_read.iloc[i, 8]
+                self.target_df.at[target_df_append_line_num, '备注'] = df_read.iloc[i, 9]
+                self.target_df.at[target_df_append_line_num, '审核意见'] = df_read.iloc[i, 10]
+                self.target_df.at[target_df_append_line_num, '审核单价'] = df_read.iloc[i, 11]
+                self.target_df.at[target_df_append_line_num, '审核数量'] = df_read.iloc[i, 12]
+                self.target_df.at[target_df_append_line_num, '审核金额'] = df_read.iloc[i, 13]
+                print(branch_name, sheet_type, '读入表的行号', i, '\n', df_read.iloc[i,11], '*', df_read.iloc[i,12], '-', df_read.iloc[i, 13])
+                self.target_df.at[target_df_append_line_num, '审核金额核对'] = df_read.iloc[i, 11] * df_read.iloc[i, 12] \
                                                                          - df_read.iloc[i, 13]
 
-            # 自动核对每一行金额计算是否正确
-            print(branch_name, sheet_type, i, ':')
-            print('自动金额', '=', self.target_df.at[i + append_begin_line_num, '单价（RMB万元）'], '*',
-                  self.target_df.at[i + append_begin_line_num, '数量'])
-            self.target_df.at[i + append_begin_line_num, '自动金额'] = \
-                self.target_df.at[i + append_begin_line_num, '单价（RMB万元）'] * \
-                self.target_df.at[i + append_begin_line_num, '数量']
-            print(self.target_df.at[i + append_begin_line_num, '自动金额'], '-',
-                  self.target_df.at[i + append_begin_line_num, '分项计划资金（RMB万元）'])
-            self.target_df.at[i + append_begin_line_num, '金额核对'] = \
-                self.target_df.at[i + append_begin_line_num, '自动金额'] - \
-                self.target_df.at[i + append_begin_line_num, '分项计划资金（RMB万元）']
-            print(self.target_df.at[i + append_begin_line_num, '自动金额'], '-',
-                  self.target_df.at[i + append_begin_line_num, '分项计划资金（RMB万元）'], '=',
-                  self.target_df.at[i + append_begin_line_num, '金额核对'])
+                # 自动核对每一行金额计算是否正确
+                if (str(df_read.iloc[i, 3]) + str(df_read.iloc[i, 6])) == 'nannan' or (
+                        str(df_read.iloc[i, 3]) + str(df_read.iloc[i, 6])) == '00':
+                    # 判断该行单价和金额是否同时为空或0
+                    # 标注无金额和单价的行
+                    self.target_df.at[target_df_append_line_num,
+                                    '分项目名称'] = '000单价金额均为空'
+                else:
+                    # print(branch_name, sheet_type, i, ':')
+                    '''print('自动金额', '=', self.target_df.at[target_df_append_line_num, '单价（RMB万元）'], '*',
+                        self.target_df.at[target_df_append_line_num, '数量'])'''
+                    self.target_df.at[target_df_append_line_num, '自动金额'] = \
+                        self.target_df.at[target_df_append_line_num, '单价（RMB万元）'] * \
+                        self.target_df.at[target_df_append_line_num, '数量']
+                    '''print(self.target_df.at[target_df_append_line_num, '自动金额'], '-',
+                        self.target_df.at[target_df_append_line_num, '分项计划资金（RMB万元）'])'''
+                    self.target_df.at[target_df_append_line_num, '金额核对'] = \
+                        self.target_df.at[target_df_append_line_num, '自动金额'] - \
+                        self.target_df.at[target_df_append_line_num,
+                                        '分项计划资金（RMB万元）']
+                    '''print(self.target_df.at[target_df_append_line_num, '自动金额'], '-',
+                        self.target_df.at[target_df_append_line_num,
+                                            '分项计划资金（RMB万元）'], '=',
+                        self.target_df.at[target_df_append_line_num, '金额核对'])'''
+
 
     def get_input_file_names(self):
         # 打开文件对话框，读入文件
