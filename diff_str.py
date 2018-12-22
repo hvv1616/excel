@@ -36,5 +36,3 @@ if __name__ == '__main__':
     str_list = finality_classes1_list
     # 用于比较的列表
     print(diff_str(str_in, str_list))
-
-
