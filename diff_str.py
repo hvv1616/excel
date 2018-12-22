@@ -15,7 +15,7 @@ def diff_str(str, list_table):
             str_std = cmp_str
     return rate, str_std
 
-def check_diff_of_str(cmp_str, str_list, base_rate):
+def check_diff_of_str(cmp_str, str_list, base_rate=0.9):
     # str   是用于比较的字符串
     # list_table 是用于比较的字符串列表
     # base_rate 是判断的最低相似度，大于此值返回True，否则返回False
@@ -31,9 +31,9 @@ def check_diff_of_str(cmp_str, str_list, base_rate):
 
 if __name__ == '__main__':
     
-    str_in = ' 2.5 WLAN'
+    str_in = '7、机动资金'
     # 用于比较的字符串
-    str_list = type_table_increase_sub
+    str_list = finality_classes1_list
     # 用于比较的列表
     print(diff_str(str_in, str_list))
 
